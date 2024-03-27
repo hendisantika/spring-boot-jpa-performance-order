@@ -36,4 +36,16 @@ class MainController {
                 .toList();
     }
 
+    @GetMapping("/api/v2/orders")
+    public List<OrderResponse> ordersV2() {
+        List<Order> orders = em.createQuery("""
+                        select order from Order order
+                        join fetch order.member member
+                        join fetch order.delivery delivery
+                        """, Order.class)
+                .getResultList();
+        return orders.stream()
+                .map(this::transform)
+                .toList();
+    }
 }
