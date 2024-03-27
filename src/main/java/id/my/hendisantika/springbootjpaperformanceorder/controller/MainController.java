@@ -4,7 +4,10 @@ import id.my.hendisantika.springbootjpaperformanceorder.repository.OrderJpaRepos
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,4 +27,13 @@ class MainController {
 
     @PersistenceContext
     private EntityManager em;
+
+    @GetMapping("/api/v1/orders")
+    public List<OrderResponse> ordersV1() {
+        return orderRepository.findAll()
+                .stream()
+                .map(this::transform)
+                .toList();
+    }
+
 }
