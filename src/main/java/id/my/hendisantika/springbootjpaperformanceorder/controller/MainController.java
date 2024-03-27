@@ -1,5 +1,10 @@
 package id.my.hendisantika.springbootjpaperformanceorder.controller;
 
+import id.my.hendisantika.springbootjpaperformanceorder.model.AddressResponse;
+import id.my.hendisantika.springbootjpaperformanceorder.model.ItemResponse;
+import id.my.hendisantika.springbootjpaperformanceorder.model.Order;
+import id.my.hendisantika.springbootjpaperformanceorder.model.OrderItem;
+import id.my.hendisantika.springbootjpaperformanceorder.model.OrderResponse;
 import id.my.hendisantika.springbootjpaperformanceorder.repository.OrderJpaRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -62,5 +67,30 @@ class MainController {
         return orders.stream()
                 .map(this::transform)
                 .toList();
+    }
+
+    private OrderResponse transform(Order order) {
+        return new OrderResponse(
+                order.getId(),
+                order.getMember().getName(), // member
+                order.getOrderDate(),
+                order.getOrderItems().stream() // orderItem, item
+                        .map(orderItem -> new ItemResponse(
+                                orderItem.getItem().getName(),
+                                orderItem.getItem().getPrice(),
+                                orderItem.getCount(),
+                                orderItem.getOrderPrice()
+                        ))
+                        .toList(),
+                order.getOrderItems().stream()
+                        .map(OrderItem::getOrderPrice)
+                        .reduce(0, Integer::sum),
+                order.getStatus(),
+                new AddressResponse(
+                        order.getDelivery().getAddress().getCity(),
+                        order.getDelivery().getAddress().getStreet(),
+                        order.getDelivery().getAddress().getZipcode()
+                ) // delivery, address
+        );
     }
 }
