@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: spring-boot-jpa-performance-order
+  h2:
+    console:
+      enabled: true
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:orders
+    username: naruto
+    password: naruto
+
+  jpa:
+    show-sql: true
+
+    properties:
+      hibernate:
+        format_sql: true
+
+logging:
+  level:
+    org.hibernate.orm.jdbc.bind: trace
